@@ -26,10 +26,11 @@ xxx.xxx.xxx.xxx:port
 ```
 
 Requirements:
-
+```
 PHP functions pcntl* enabled  
 xfce4-terminal  
 xwd  
+```
 
 
 <img src="https://raw.githubusercontent.com/gwen001/shotTheWorld/master/example.png" alt="shotTheWorld">
