@@ -17,7 +17,7 @@ if( !is_dir(OUTPUT_DIR) || !is_writable(OUTPUT_DIR) ) {
 	exit( 'Error: cannot write in '.OUTPUT_DIR."!\n" );
 }
 
-define( 'MT_MAX_CHILD', 15 ); // n threads
+define( 'MT_MAX_CHILD', 25 ); // n threads
 define( 'MT_SLEEP', 100000 ); // 0.1 scd
 
 define( 'WINDOW_TITLE_PREFIX', 'shotTheWorld >' );
@@ -83,8 +83,11 @@ function interp( $str )
 	if( strstr($str,'MySQL') ) {
 		return 'MYSQL';
 	}
-	if( strstr($str,'timed out') ) {
+	if( strstr($str,'Connection timed out') ) {
 		return 'timeout';
+	}
+	if( strstr($str,'Connection refused') ) {
+		return 'refused';
 	}
 	
 	return 'unknown';
@@ -169,45 +172,7 @@ $html_header = '<!doctype html>
 <head>
 <meta charset="utf-8">
 <title>Report</title>
-<style>
-img {
-  max-width: 550px;
-}
-.timeout {
-  opacity: 0.5;
-}
-.r {
-  border: 1px dashed #F00;
-  float:left;
-  margin-bottom: 20px;
-  margin-right: 20px;
-  padding: 10px;
-}
-.r:hover {
-  border: 1px solid #F00;
-}
-.r .timeout {
-  color: #AAA;
-}
-.title {
-  padding-bottom: 20px;
-}
-.tdimg {
-  padding-right: 30px;
-  float: left;
-}
-.tdres {
-  float: right;
-}
-.ip {
-  font-size: 20pt;
-  padding-right: 20px;
-}
-.port {
-  font-size: 26pt;
-  font-weight: bold;
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>';
 

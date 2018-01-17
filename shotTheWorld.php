@@ -120,6 +120,7 @@ while( $run );
 
 
 file_put_contents( OUTPUT_FILE, $html_footer, FILE_APPEND );
+copy( 'style.css', OUTPUT_DIR.'style.css' );
 
 exit();
 

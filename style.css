@@ -1,0 +1,58 @@
+img {
+  max-width: 550px;
+}
+
+.r {
+  border-style: dashed;
+  border-width: 1px;
+  float:left;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  padding: 10px;
+}
+.r:hover {
+  border-style: solid;
+}
+
+.title {
+  padding-bottom: 20px;
+}
+.tdimg {
+  padding-right: 30px;
+  float: left;
+}
+.tdres {
+  float: right;
+}
+.ip {
+  font-size: 20pt;
+  padding-right: 20px;
+}
+.port {
+  font-size: 26pt;
+  font-weight: bold;
+}
+
+
+.s_unknown {
+}
+.s_timeout {
+  opacity: 0.2;
+  border-color: #222;
+}
+.s_refused {
+  opacity: 0.2;
+  border-color: #222;
+}
+.s_HTTP {
+  border-color: blue;
+  color: blue;
+}
+.s_MYSQL {
+  border-color: green;
+  color: green;
+}
+.s_SSH {
+  border-color: red;
+  color: red;
+}

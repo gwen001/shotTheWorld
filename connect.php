@@ -35,6 +35,7 @@ $img = createImageName( $ip, $port );
 
 
 //system( 'clear' );
+$output = '';
 $fp = @fsockopen( $ip, $port, $errno, $errstr, 3 );
 echo "Trying to connect to ".$ip." on port ".$port."\n\n";
 
@@ -43,12 +44,12 @@ if( $fp )
 	echo "Connection open ".$ip." ".$port."\n\n";
 	fwrite( $fp, SEND_STRING );
     stream_set_timeout( $fp, DELAY_SOCKET );
-    $output = fread( $fp, RESULT_LENGTH );
+    $output .= fread( $fp, RESULT_LENGTH );
     $info = stream_get_meta_data( $fp );
     fclose($fp);
 
     if( $info['timed_out'] ) {
-        $output = "Connection timed out!\n";
+        $output .= "\nConnection timed out!\n";
     }
     
 	$t_result[$ip][$port] = $output;
@@ -68,10 +69,9 @@ if( is_file($img) )
 {
 	$service = interp( $output );
 	//echo $service."\n";
-	$c = ($service=='timeout')?'timeout':'';
 	
 	$html = "\n";
-	$html .= '<div class="r '.$c.'">';
+	$html .= '<div class="r s_'.$service.'">';
 	$html .= '<div class="tdimg"><img src="'.createImageName($ip,$port,false).'" /></div>';
 	$html .= '<div class="tdres">';
 	$html .= '<div class="title">';
