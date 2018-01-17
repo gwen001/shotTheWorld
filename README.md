@@ -25,7 +25,7 @@ xxx.xxx.xxx.xxx:port
 xxx.xxx.xxx.xxx:port
 ```
 
-# Requirements
+Requirements:
 
 PHP functions pcntl* enabled  
 xfce4-terminal  
