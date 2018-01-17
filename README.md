@@ -25,5 +25,14 @@ xxx.xxx.xxx.xxx:port
 xxx.xxx.xxx.xxx:port
 ```
 
+# Requirements
+
+PHP functions pcntl* enabled  
+xfce4-terminal  
+xwd  
+  
+  
+  
+  
 I don't believe in license.  
 You can do want you want with this program.  
