@@ -32,7 +32,7 @@ xfce4-terminal
 xwd  
 ```
 
-Tests:
+Test:
 ```
 674 ip tested in 2mn23 with 15 threads
 ```
