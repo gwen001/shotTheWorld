@@ -32,6 +32,11 @@ xfce4-terminal
 xwd  
 ```
 
+Tests:
+```
+674 ip tested in 2mn23 with 15 threads
+```
+
 
 <img src="https://raw.githubusercontent.com/gwen001/shotTheWorld/master/example.png" alt="shotTheWorld">
 <br><br>

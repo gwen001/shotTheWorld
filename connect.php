@@ -35,7 +35,7 @@ $img = createImageName( $ip, $port );
 
 
 //system( 'clear' );
-$fp = fsockopen( $ip, $port, $errno, $errstr, 3 );
+$fp = @fsockopen( $ip, $port, $errno, $errstr, 3 );
 echo "Trying to connect to ".$ip." on port ".$port."\n\n";
 
 if( $fp )
