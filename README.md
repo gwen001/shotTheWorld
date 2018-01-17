@@ -34,7 +34,7 @@ xwd
 
 Test:
 ```
-674 ip tested in 2mn23 with 15 threads
+674 ip screenshoted in 2mn23 with 15 threads
 ```
 
 
