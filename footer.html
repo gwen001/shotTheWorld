@@ -1,0 +1,36 @@
+				
+			</div>
+		</div>
+		<script type="text/javascript">
+			var t_service = {'all':0};
+			
+			$( document ).ready(function(){
+				$('div[class~="r"]').each(function(){
+					var s = $(this).attr('data-service');
+					if( s in t_service == false ) {
+						t_service[s] = 0;
+					}
+					t_service[s]++;
+					t_service['all']++;
+				});
+				
+				for( var s in t_service ) {
+					if( s != 'all' ) {
+						$('.menu').append( '|' );
+					}
+					$('.menu').append( '<a href="#" data-href="'+s+'" class="s_'+s+'">'+s+' ('+t_service[s]+')</a>' );
+				}
+				
+				$('.menu a').click(function(){
+					var s = $(this).attr('data-href');
+					if( s == 'all' ) {
+						$('div[class*="s_"]').show();
+					} else {
+						$('div[class*="s_"]').hide();
+						$('div[class~="s_'+s+'"]').show();
+					}
+				});
+			});
+		</script>
+	</body>
+</html>

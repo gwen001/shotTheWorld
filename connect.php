@@ -69,20 +69,8 @@ if( is_file($img) )
 {
 	$service = interp( $output );
 	//echo $service."\n";
-	
-	$html = "\n";
-	$html .= '<div class="r s_'.$service.'">';
-	$html .= '<div class="tdimg"><img src="'.createImageName($ip,$port,false).'" /></div>';
-	$html .= '<div class="tdres">';
-	$html .= '<div class="title">';
-	$html .= '<span class="ip">'.$ip.'</span> <span class="port">'.$port.'</span>';
-	$html .= '</div>';
-	$html .= '<div class="interp">Guess: '.$service.'</div>';
-	$html .= '</div>';
-	$html .= '</div>';
-	$html .= "\n";
-	
-	file_put_contents( OUTPUT_FILE, $html, FILE_APPEND );
+	$args = [ 'ip'=>$ip, 'port'=>$port, 'service'=>$service, 'img'=>createImageName($ip,$port,false), 'output'=>$output ];
+	render( $args );
 }
 
 exit();

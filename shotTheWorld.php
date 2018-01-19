@@ -25,14 +25,43 @@ if( !is_file($input_file) ) {
 
 
 
-function run( $ip, $port )
+function connect( $ip, $port )
 {
-	echo "-> called ".$ip." ".$port."\n";
-	$wtitle = createWindowTitle( $ip, $port );
+	$output = '';
+	echo "calling ".$ip." ".$port."\n";
+
+	ob_start();
+	$fp = @fsockopen( $ip, $port, $errno, $errstr, 3 );
+	echo "Trying to connect to ".$ip." on port ".$port."\n\n";
 	
-	$cmd = createConnectCommand( $ip, $port );
-	$term = createTerminalCommand( $cmd, $wtitle );
-	system( $term );
+	if( $fp )
+	{
+		echo "Connection opened ".$ip." ".$port."\n\n";
+		fwrite( $fp, SEND_STRING );
+	    stream_set_timeout( $fp, DELAY_SOCKET );
+	    $output .= fread( $fp, RESULT_LENGTH );
+	    $info = stream_get_meta_data( $fp );
+	    fclose($fp);
+	
+	    if( $info['timed_out'] ) {
+	        $output .= "\nConnection timed out!\n";
+	    }
+	    
+		$t_result[$ip][$port] = $output;
+	    echo $output."\n";
+	}
+	else
+	{
+		echo $errstr."\n";
+	}
+	
+	$output = ob_get_contents();
+	ob_end_clean();
+
+	$service = interp( $output );
+	//echo $service."\n";
+	$args = [ 'ip'=>$ip, 'port'=>$port, 'service'=>$service, 'output'=>$output ];
+	render( $args );
 }
 
 
@@ -45,81 +74,55 @@ $t_process = [];
 $t_signal_queue = [];
 
 
-file_put_contents( OUTPUT_FILE, $html_header );
+file_put_contents( OUTPUT_FILE, file_get_contents(HTML_HEADER) );
 
-$t_origin = $t_input = file( $input_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES );
+$t_input = file( $input_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES );
 $run = true;
 $n_loop = 1;
 
-do
+//var_dump($t_input);
+$cnt = count( $t_input );
+echo "\n".$cnt." IPs loaded\n\n";
+
+for( $index=0 ; $index<$cnt ; )
 {
-	//var_dump($t_input);
-	$cnt = count( $t_input );
-	echo "\n".str_pad( ' LOOP '.$n_loop.' ('.$cnt.' ip) ', 50, '#', STR_PAD_BOTH )."\n\n";
+	list( $ip, $port ) = explode( ':', $t_input[$index] );
 	
-	for( $index=0 ; $index<$cnt ; )
+	if( $n_child < MT_MAX_CHILD )
 	{
-		list( $ip, $port ) = explode( ':', $t_input[$index] );
+		$pid = pcntl_fork();
 		
-		if( $n_child < MT_MAX_CHILD )
-		{
-			$pid = pcntl_fork();
-			
-			if( $pid == -1 ) {
-				// fork error
-			} elseif( $pid ) {
-				// father
-				$n_child++;
-				$index++;
-				$t_process[$pid] = uniqid();
-		        if( isset($t_signal_queue[$pid]) ){
-		        	$signal_handler( SIGCHLD, $pid, $t_signal_queue[$pid] );
-		        	unset( $t_signal_queue[$pid] );
-		        }
-			} else {
-				// child process
-				run( $ip, $port );
-				exit( 0 );
-			}
+		if( $pid == -1 ) {
+			// fork error
+		} elseif( $pid ) {
+			// father
+			$n_child++;
+			$index++;
+			$t_process[$pid] = uniqid();
+	        if( isset($t_signal_queue[$pid]) ){
+	        	$signal_handler( SIGCHLD, $pid, $t_signal_queue[$pid] );
+	        	unset( $t_signal_queue[$pid] );
+	        }
+		} else {
+			// child process
+			connect( $ip, $port );
+			exit( 0 );
 		}
-	
-		killWindow( WINDOW_TITLE_PREFIX, MAX_WINDOW );
-		
-		usleep( MT_SLEEP );
 	}
 	
-	while( $n_child ) {
-		echo $n_child." childs remaining!\n";
-		// surely leave the loop please :)
-		sleep( 1 );
-	}
-	
-	echo "Killing extra window...\n";
-	sleep( DELAY_THEEND );
-	killWindow( WINDOW_TITLE_PREFIX );
-	
-	echo $cnt." ips provided.\n";
-	$t_shot = glob( OUTPUT_DIR.'*.png' );
-	//var_dump($t_shot);
-	echo count($t_shot)." screenshots found.\n";
-	$t_shot = array_map( function($v){return str_replace('.png','',str_replace('_',':',basename($v)));}, $t_shot );
-	//var_dump( $t_shot );
-	//exit();
-	$t_diff = array_values( array_diff($t_origin, $t_shot) );
-	echo count($t_diff)." ips to retry!\n";
-	//var_dump( $t_diff );
-	
-	if( count($t_diff) && $n_loop<MAX_LOOP ) {
-		$n_loop++;
-		$t_input = $t_diff;
-	} else {
-		$run = false;
-	}
+	usleep( MT_SLEEP );
 }
-while( $run );
+
+echo "\n";
+while( $n_child ) {
+	echo $n_child." childs remaining!\n";
+	// surely leave the loop please :)
+	sleep( 1 );
+}
+echo "\n";
 
 
-file_put_contents( OUTPUT_FILE, $html_footer, FILE_APPEND );
+file_put_contents( OUTPUT_FILE, file_get_contents(HTML_FOOTER), FILE_APPEND );
 copy( 'style.css', OUTPUT_DIR.'style.css' );
 
 exit();
