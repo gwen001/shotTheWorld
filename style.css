@@ -31,6 +31,7 @@ pre {
 	font-size: 9pt;
 	font-weight: 600;
 	max-height: 300px;
+	min-height: 100px;
 	overflow-y: auto;
 	padding: 5px;
 }

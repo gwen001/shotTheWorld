@@ -38,7 +38,15 @@ Test:
 3398 port screenshoted in 14mn01 with 25 threads, 3 pass
 ```
 
+# UPDATE
+Code review  
+No image anymore  
+jQuery and bootstrap implemented  
+Menu to select what items to display  
+Speed improvment (test: 3398 port scanned in 4mn46 with 15 threads)  
 
+
+<br><br>
 <img src="https://raw.githubusercontent.com/gwen001/shotTheWorld/master/example.png" alt="shotTheWorld">
 <br><br>
 
