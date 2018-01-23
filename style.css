@@ -12,6 +12,9 @@ pre {
 	margin-left: 5px;
 	margin-right: 5px;
 }
+.menu a.select {
+	text-decoration: underline;
+}
 .pagination {
 	position: absolute;
 	right: 10px;

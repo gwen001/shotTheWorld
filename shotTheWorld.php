@@ -31,6 +31,8 @@ include( __DIR__.'/config.php' );
 	$n_child = 0;
 	$t_process = [];
 	$t_signal_queue = [];
+	
+	copy( 'style.css', OUTPUT_DIR.'style.css' );
 }
 // ---
 
@@ -94,7 +96,7 @@ include( __DIR__.'/config.php' );
 {
 	$total_page = $current_page;
 	
-	$cmd = 'egrep -o \'data-service="(.*)"\' '.OUTPUT_DIR.'/*  | cut -d \'"\' -f 2';
+	$cmd = 'egrep -a -o \'data-service="(.*)"\' '.OUTPUT_DIR.'/*  | cut -d \'"\' -f 2';
 	exec( $cmd, $output );
 	$t_count = array_count_values( $output );
 	$t_count = array_merge( ['all'=>array_sum($t_count)], $t_count );
@@ -104,8 +106,6 @@ include( __DIR__.'/config.php' );
 	for( $i=1 ; $i<=$total_page ; $i++ ) {
 		render( HTML_FOOTER, $i, ['OUTPUT_DIR'=>OUTPUT_DIR,'T_SERVICE'=>$t_count,'TOTAL_PAGE'=>$total_page,'CURRENT_PAGE'=>$i], false );
 	}
-	
-	copy( 'style.css', OUTPUT_DIR.'style.css' );
 }
 // ---
 

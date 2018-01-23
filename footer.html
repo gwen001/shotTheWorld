@@ -6,8 +6,13 @@
 			var t_service_current = {'all':0};
 			var total_page = __TOTAL_PAGE__;
 			var current_page = __CURRENT_PAGE__;
+			var menu_select = 'all';
 			
 			$( document ).ready(function(){
+				if( window.location.hash ) {
+					menu_select = window.location.hash.replace('#', '');
+				}
+				
 				$('div[class~="r"]').each(function(){
 					var s = $(this).attr('data-service');
 					if( s in t_service_current == false ) {
@@ -17,6 +22,7 @@
 					t_service_current['all']++;
 				});
 				
+				// pagination
 				for( var i=1 ; i<=total_page ; i++ ) {
 					if( i == current_page ) {
 						$('.pagination').append( '<span>'+i+'</span>' );
@@ -25,6 +31,12 @@
 					}
 				}
 				
+				$('.pagination a').click(function(e){
+					e.preventDefault();
+					window.location = $(this).attr('href')+'#'+menu_select;
+				});
+				
+				// menu
 				for( var s in t_service_total ) {
 					if( s != 'all' ) {
 						$('.menu').append( '|' );
@@ -34,19 +46,29 @@
 					} else {
 						s_current = t_service_current[s];
 					}
-					$('.menu').append( '<a href="#" data-href="'+s+'" class="s_'+s+'">'+s+' ('+s_current+'/'+t_service_total[s]+')</a>' );
+					$('.menu').append( '<a href="#'+s+'" data-href="'+s+'" class="'+((s == menu_select)?'select':'')+' s_'+s+'">'+s+' ('+s_current+'/'+t_service_total[s]+')</a>' );
 				}
 				
+				// filter
 				$('.menu a').click(function(){
 					var s = $(this).attr('data-href');
-					if( s == 'all' ) {
-						$('div[class*="s_"]').show();
-					} else {
-						$('div[class*="s_"]').hide();
-						$('div[class~="s_'+s+'"]').show();
-					}
+					menu_select = s;
+					refreshDatas( s );
 				});
+				
+				refreshDatas( menu_select );
 			});
+			
+			function refreshDatas( s ) {
+				if( s == 'all' ) {
+					$('div[class*="s_"]').show();
+				} else {
+					$('div[class*="s_"]').hide();
+					$('div[class~="s_'+s+'"]').show();
+				}
+				$('.menu a').removeClass( 'select' );
+				$('.menu a[data-href="'+s+'"]').addClass( 'select' );
+			}
 		</script>
 	</body>
 </html>

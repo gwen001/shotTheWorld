@@ -7,7 +7,7 @@ define( 'HTML_HEADER', __DIR__.'/header.html' ); // html header
 define( 'HTML_FOOTER', __DIR__.'/footer.html' ); // html footer
 define( 'HTML_SERVICE', __DIR__.'/service.html' ); // html footer
 
-define( 'MAX_ITEM_PER_PAGE', 10 ); // the name says everything
+define( 'MAX_ITEM_PER_PAGE', 1500 ); // the name says everything
 define( 'OUTPUT_DIR', __DIR__.'/output/' ); // output file
 define( 'OUTPUT_FILE', OUTPUT_DIR.'shottheworld-__PAGE__.html' ); // output file
 
