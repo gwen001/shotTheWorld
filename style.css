@@ -12,6 +12,13 @@ pre {
 	margin-left: 5px;
 	margin-right: 5px;
 }
+.pagination {
+	position: absolute;
+	right: 10px;
+}
+.pagination span, .pagination a {
+	margin-left: 5px;
+}
 
 .r {
 	border-style: dashed;
@@ -51,6 +58,10 @@ pre {
 
 .s_unknown {
 }
+.s_failed {
+	opacity: 0.7;
+	border-color: #777;
+}
 .s_empty {
 	opacity: 0.5;
 	border-color: #555;
@@ -67,6 +78,10 @@ pre {
 	border-color: blue;
 	color: blue;
 }
+.s_FTP {
+	border-color: #0FF;
+	color: #0FF;
+}
 .s_MYSQL {
 	border-color: green;
 	color: green;
@@ -74,4 +89,8 @@ pre {
 .s_SSH {
 	border-color: red;
 	color: red;
+}
+.s_Mail {
+	border-color: #CC00CC;
+	color: #CC00CC;
 }

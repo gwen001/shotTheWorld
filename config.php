@@ -5,10 +5,11 @@ include( __DIR__.'/Utils.php' );
 
 define( 'HTML_HEADER', __DIR__.'/header.html' ); // html header
 define( 'HTML_FOOTER', __DIR__.'/footer.html' ); // html footer
-define( 'HTML_TEMPLATE', __DIR__.'/template.html' ); // html footer
+define( 'HTML_SERVICE', __DIR__.'/service.html' ); // html footer
 
+define( 'MAX_ITEM_PER_PAGE', 10 ); // the name says everything
 define( 'OUTPUT_DIR', __DIR__.'/output/' ); // output file
-define( 'OUTPUT_FILE', OUTPUT_DIR.'shottheworld.html' ); // output file
+define( 'OUTPUT_FILE', OUTPUT_DIR.'shottheworld-__PAGE__.html' ); // output file
 
 if( !is_dir(OUTPUT_DIR) ) {
 	@mkdir( OUTPUT_DIR, 0777, true );
@@ -34,10 +35,15 @@ define( 'RESULT_LENGTH', 1000 ); // length to crop the result
  */
 function interp( $str )
 {
+	$str = trim( $str );
+	
 	if( !strlen($str) ) {
 		return 'empty';
 	}
-	if( strstr($str,'HTTP') ) {
+	if( strstr($str,'FTP') || strstr($str,'220-') || strstr($str,'220 ftp server') || strstr($str,'sftp') || strstr($str,'ActiveTransfer Ready') ) {
+		return 'FTP';
+	}
+	if( strstr($str,'HTTP/1.') || stristr($str,'<html>') || stristr($str,'<!DOCTYPE HTML PUBLIC') || stristr($str,'<?xml version="1.0"?>') ) {
 		return 'HTTP';
 	}
 	if( strstr($str,'SSH') ) {
@@ -46,14 +52,20 @@ function interp( $str )
 	if( strstr($str,'MySQL') ) {
 		return 'MYSQL';
 	}
-	if( strstr($str,'POP3') ) {
-		return 'POP3';
+	if( strstr($str,'POP3') || strstr($str,'IMAP4rev1') || strstr($str,'+OK Dovecot ready') ) {
+		return 'Mail';
+	}
+	if( strstr($str,'ESMTP Postfix') || strstr($str,'Microsoft ESMTP') ) {
+		return 'Mail';
 	}
 	if( strstr($str,'Connection timed out') ) {
 		return 'timeout';
 	}
 	if( strstr($str,'Connection refused') ) {
 		return 'refused';
+	}
+	if( strstr($str,'No route to host') ) {
+		return 'failed';
 	}
 	
 	return 'unknown';
@@ -63,20 +75,24 @@ function interp( $str )
 /**
  * render result
  *
+ * @param string $tpl
  * @param array $ip
+ * @param integer $page
  */
-function render( $args )
+function render( $tpl, $page, $args=array(), $htmlencode=true )
 {
-	$html = file_get_contents( HTML_TEMPLATE );
+	$html = file_get_contents( $tpl );
 	
 	foreach( $args as $k=>$v ) {
 		$k = '__'.strtoupper($k).'__';
-		$v = htmlspecialchars( $v );
+		if( $htmlencode ) {
+			$v = htmlspecialchars( $v );
+		}
 		$v = str_replace( "\n", "<br/>\n", $v );
 		$html = str_replace( $k, $v, $html );
 	}
 	
-	file_put_contents( OUTPUT_FILE, $html, FILE_APPEND );
+	return file_put_contents( str_replace('__PAGE__',$page,OUTPUT_FILE), $html, FILE_APPEND );
 }
 
 
@@ -115,6 +131,54 @@ function signal_handler( $signal, $pid=null, $status=null )
 	}
 	
 	return true;
+}
+
+
+/**
+ * socket function
+ *
+ * @param string $ip
+ * @param integer $port
+ * @param integer $page
+ */
+function connect( $ip, $port, $page )
+{
+	$output = '';
+	echo "calling ".$ip." ".$port."\n";
+
+	ob_start();
+	$fp = @fsockopen( $ip, $port, $errno, $errstr, 3 );
+	echo "Trying to connect to ".$ip." on port ".$port."\n\n";
+	
+	if( $fp )
+	{
+		echo "Connection opened ".$ip." ".$port."\n\n";
+		fwrite( $fp, SEND_STRING );
+	    stream_set_timeout( $fp, DELAY_SOCKET );
+	    $output .= fread( $fp, RESULT_LENGTH );
+	    $info = stream_get_meta_data( $fp );
+	    fclose($fp);
+	
+	    if( $info['timed_out'] ) {
+	        $output .= "\nConnection timed out!\n";
+	    }
+	    
+		$t_result[$ip][$port] = $output;
+	    echo $output."\n";
+	}
+	else
+	{
+		$output = $errstr;
+		echo $errstr."\n";
+	}
+	
+	$display = ob_get_contents();
+	ob_end_clean();
+
+	$service = interp( $output );
+	//echo $service."\n";
+	$args = [ 'ip'=>$ip, 'port'=>$port, 'service'=>$service, 'output'=>$display ];
+	render( HTML_SERVICE, $page, $args );
 }
 
 ?>

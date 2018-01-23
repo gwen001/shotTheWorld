@@ -2,23 +2,39 @@
 			</div>
 		</div>
 		<script type="text/javascript">
-			var t_service = {'all':0};
+			var t_service_total = __T_SERVICE__;
+			var t_service_current = {'all':0};
+			var total_page = __TOTAL_PAGE__;
+			var current_page = __CURRENT_PAGE__;
 			
 			$( document ).ready(function(){
 				$('div[class~="r"]').each(function(){
 					var s = $(this).attr('data-service');
-					if( s in t_service == false ) {
-						t_service[s] = 0;
+					if( s in t_service_current == false ) {
+						t_service_current[s] = 0;
 					}
-					t_service[s]++;
-					t_service['all']++;
+					t_service_current[s]++;
+					t_service_current['all']++;
 				});
 				
-				for( var s in t_service ) {
+				for( var i=1 ; i<=total_page ; i++ ) {
+					if( i == current_page ) {
+						$('.pagination').append( '<span>'+i+'</span>' );
+					} else {
+						$('.pagination').append( '<a href="shottheworld-'+i+'.html">'+i+'</a>' );
+					}
+				}
+				
+				for( var s in t_service_total ) {
 					if( s != 'all' ) {
 						$('.menu').append( '|' );
 					}
-					$('.menu').append( '<a href="#" data-href="'+s+'" class="s_'+s+'">'+s+' ('+t_service[s]+')</a>' );
+					if( s in t_service_current == false ) {
+						s_current = 0;
+					} else {
+						s_current = t_service_current[s];
+					}
+					$('.menu').append( '<a href="#" data-href="'+s+'" class="s_'+s+'">'+s+' ('+s_current+'/'+t_service_total[s]+')</a>' );
 				}
 				
 				$('.menu a').click(function(){
