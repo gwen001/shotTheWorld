@@ -49,7 +49,7 @@ xxx.xxx.xxx.xxx:port
 
 ---
 
-<img src="https://raw.githubusercontent.com/gwen001/shotTheWorld/main/preview.png" alt="shotTheWorld preview">
+<img src="https://raw.githubusercontent.com/gwen001/shotTheWorld/master/preview.png" alt="shotTheWorld preview">
 
 ---
 
