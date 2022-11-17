@@ -1,16 +1,42 @@
-# shotTheWorld
-PHP tool that take screenshot of a socket connection on a given ip/port list and then try to guess the service.  
-The output is a HTML file located in the output directory with all screenshots.  
-Note that this is an automated tool, manual check is still required.  
+<h1 align="center">shotTheWorld</h1>
+
+<h4 align="center">PHP tool that takes screenshots of a given ips/ports combo list and then try to guess the service.</h4>
+
+<p align="center">
+    <img src="https://img.shields.io/badge/php-%3E=7.2.5-blue" alt="php badge">
+    <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT license badge">
+    <a href="https://twitter.com/intent/tweet?text=https%3a%2f%2fgithub.com%2fgwen001%2fshotTheWorld%2f" target="_blank"><img src="https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fgwen001%2FshotTheWorld" alt="twitter badge"></a>
+</p>
+
+<p align="center">
+    <img src="https://img.shields.io/github/stars/gwen001/shotTheWorld?style=social" alt="github stars badge">
+    <img src="https://img.shields.io/github/watchers/gwen001/shotTheWorld?style=social" alt="github watchers badge">
+    <img src="https://img.shields.io/github/forks/gwen001/shotTheWorld?style=social" alt="github forks badge">
+</p>
+
+---
+
+## Description
+
+shotTheWorld uses a different approach to determine what service if behind an opened port.
+It takes a text screenshot of a socket connection and render the output in a HTML file located in the output directory.  
+
+## Install
 
 ```
-Usage: php shotTheWorld.php <source file>
+git clone https://github.com/gwen001/shotTheWorld
+```
+
+## Usage 
+
+```
+Usage: php shotTheWorld.php <combo list>
 
 Options:
 	check config.php to manually change the options
 
 Examples:
-	php shotTheWorld.php test
+	php shotTheWorld.php combos.txt
 ```
 
 The source file should respect the following format:  
@@ -18,38 +44,13 @@ The source file should respect the following format:
 xxx.xxx.xxx.xxx:port
 xxx.xxx.xxx.xxx:port
 xxx.xxx.xxx.xxx:port
-xxx.xxx.xxx.xxx:port
-xxx.xxx.xxx.xxx:port
-xxx.xxx.xxx.xxx:port
-xxx.xxx.xxx.xxx:port
-xxx.xxx.xxx.xxx:port
+...
 ```
 
-Requirements:
-```
-PHP functions pcntl* enabled  
-xfce4-terminal  
-xwd  
-```
+---
 
-Test:
-```
-674 port screenshoted in 2mn23 with 15 threads, 2 pass
-3398 port screenshoted in 14mn01 with 25 threads, 3 pass
-```
+<img src="https://raw.githubusercontent.com/gwen001/shotTheWorld/main/preview.png" alt="shotTheWorld preview">
 
-# UPDATE
-Code review  
-No image anymore  
-jQuery and Bootstrap implemented  
-Menu to select what items to display  
-Speed improvement (test: 3398 port scanned in 4mn46 with 15 threads)  
+---
 
-
-<br><br>
-<img src="https://raw.githubusercontent.com/gwen001/shotTheWorld/master/example.png" alt="shotTheWorld">
-<br><br>
-
-
-I don't believe in license.  
-You can do want you want with this program.  
+Feel free to [open an issue](/../../issues/) if you have any problem with the script.  
